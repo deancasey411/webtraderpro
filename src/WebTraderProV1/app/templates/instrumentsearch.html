@@ -1,0 +1,32 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" ng-click="close()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h3 class="modal-title" style="">Search Results</h3>
+</div>
+<div class="modal-body" style="max-height:400px; overflow-y:auto;" stop-event="touchend">
+    <table class="table table-condensed table-hover table-small">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Exchange</th>
+                <th style="text-align:center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-show="loading">
+                <td colspan="4">
+                    <span><i class="glyphicon glyphicon-repeat gly-spin"></i>&nbsp;Loading...</span>
+                </td>
+            </tr>
+            <tr ng-repeat="instrument in instruments">
+                <td>{{ ::instrument.symbol }}</td>
+                <td>{{ ::instrument.name }}</td>
+                <td>{{ ::instrument.exchange }}</td>
+                <td style="text-align:center"><button class="btn btn-xs btn-default" ng-show="$parent.options.action === 'WL' || $parent.options.action === 'IWL'" ng-click="doAction('WL',instrument.exchangeSymbolKey,instrument.symbol,instrument.name)"><span class="glyphicon glyphicon-plus"></span> WL</button> <button class="btn btn-xs btn-default" ng-show="$parent.options.action=='SI'" ng-click="doAction('SI',instrument.exchangeSymbolKey,instrument.symbol,instrument.name)"><span class="glyphicon glyphicon-refresh"></span> SI</button> <button class="btn btn-xs btn-default" ng-show="$parent.options.action=='OR'" ng-click="doAction('OR',instrument.exchangeSymbolKey,instrument.symbol,instrument.name)"><span class="glyphicon glyphicon-record"></span> OR</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-sm btn-default" ng-click="close()">Close</button>
+</div>

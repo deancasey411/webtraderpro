@@ -1,0 +1,17 @@
+﻿<div style="text-align: right;" ng-show="global.showPositions && global.showPositionsSummary">
+    <button class="btn btn-info btn-sm" type="button">
+        Exposure (Long) <span class="badge">{{ dataStore.positionsSummary.longExposure | number:2 }}</span> (Short) <span class="badge">{{ dataStore.positionsSummary.shortExposure | number:2 }}</span>
+    </button>
+    <button class="btn btn-default btn-sm" type="button">
+        Gearing <span class="badge">{{ dataStore.positionsSummary.gearing.toFixed(2) }}</span>
+    </button>
+    <button class="btn btn-default btn-sm" type="button">
+        Available Cash <span class="badge">{{ dataStore.positionsSummary.availableCash | number:2 }}</span>
+    </button>
+    <button class="btn btn-default btn-sm" type="button">
+        Portfolio Value <span class="badge">{{ dataStore.positionsSummary.portfolioValue | number:2 }}</span>
+    </button>
+    <button class="btn btn-primary btn-sm" type="button" ng-click="dataStore.isCollapsed = !dataStore.isCollapsed">
+        {{ dataStore.isCollapsed ? "Show Details" : "Hide Details" }}
+    </button>
+</div>

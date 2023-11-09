@@ -1,0 +1,16 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" ng-click="close()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <div class="modal-title">
+        <h4>{{ ::data.headline }}</h4>
+        <h5>Timestamp: {{ ::data.timeStamp | date: 'dd/MM/yyyy H:mm:ss' }}</h5>
+        <h5>Associated Instruments: {{ ::data.instrumentCodes.join(', ') }}</h5>
+    </div>
+</div>
+<div class="modal-body" style="max-height:400px; overflow-y:auto;" stop-event="touchend">
+    <div style="font-family: monospace; white-space: pre;">
+        {{ ::data.content }}
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-sm btn-default" ng-click="close()">Close</button>
+</div>

@@ -1,0 +1,146 @@
+<div ng-controller="stockinfoController">
+    <div class="col-md-8">
+        <div class="input-group  input-group-sm">
+            <input id="txtStockInfo" type="text" class="form-control" ng-keydown="keypressed($event)" style="min-width:200px;" ng-model="dataStore.siSymbol" placeholder="Enter an instrument code" capitalize />
+            <span class="input-group-btn">
+                <button class="btn btn-default" ng-disabled="dataStore.siSymbol === null || dataStore.siSymbol === ''" type="button" ng-click="searchInstrument()"><span class="glyphicon glyphicon-search"></span></button>
+            </span>
+        </div>
+        <div id="stock-info-table" class="table-responsive ">
+            <table class="table table-condensed">
+                <tbody>
+                    <tr>
+                        <!--<td class="hidden-xs">Symbol</td>-->
+                        <td colspan="4" data-title="Symbol" style="padding-right:10px;">
+                            <strong>{{ dataStore.stockInfo.Symbol }}&nbsp;-&nbsp;{{ dataStore.stockInfo.Name }}</strong>
+                        </td>
+                        <!--<td class="hidden-xs">Name</td>
+                        <td data-title="Name" class="numeric">&nbsp;</td>-->
+                    </tr>
+                    <tr>
+                        <td class="hidden-xs">Change</td>
+                        <td data-title="Change" class="numeric text-{{ dataStore.stockInfo.chgColour }}" style="padding-right: 10px;">{{ dataStore.stockInfo.Chg }}&nbsp;</td>
+                        <td class="hidden-xs">Change %</td>
+                        <td data-title="Change %" class="numeric text-{{ dataStore.stockInfo.chgColour }}"><span ng-hide="dataStore.stockInfo.ChgP === null || dataStore.stockInfo.ChgP === ''">{{ dataStore.stockInfo.ChgP | number:2 }}</span>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="hidden-xs">Low</td>
+                        <td data-title="Low" class="numeric" style="padding-right: 10px;">{{ dataStore.stockInfo.L }}&nbsp;</td>
+                        <td class="hidden-xs">High</td>
+                        <td data-title="High" class="numeric">{{ dataStore.stockInfo.H }}&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="hidden-xs">No. of Trades</td>
+                        <td data-title="No. of Trades" class="numeric" style="padding-right: 10px;">{{ dataStore.stockInfo.NTrd | number }}&nbsp;</td>
+                        <td class="hidden-xs">Prev. Close</td>
+                        <td data-title="Prev. Close" class="numeric">{{ dataStore.stockInfo.Cls }}&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="hidden-xs">Trade Volume</td>
+                        <td data-title="Trade. Volume" class="numeric" style="padding-right: 10px;">{{ dataStore.stockInfo.TVol | number }}&nbsp;</td>
+                        <td class="hidden-xs">Trade Value</td>
+                        <td data-title="Trade. Value" class="numeric">{{ dataStore.stockInfo.TVal | number:2 }}&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td class="hidden-xs">Trading Status</td>
+                        <td data-title="Trading Status" colspan="3" class="numeric">{{ dataStore.stockInfo.St }}&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <table class="table table-condensed table-small">
+            <thead>
+                <tr>
+                    <th class="numeric" style="height: 21px;">Bid Vol</th>
+                    <th class="numeric">Bid Price</th>
+                    <th class="numeric">Ask Price</th>
+                    <th class="numeric">Ask Vol</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="numeric" style="height: 21px;">{{ dataStore.stockInfo.BS1 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.B1 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.A1 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.AS1 }}</td>
+                </tr>
+                <tr>
+                    <td class="numeric" style="height: 21px;">{{ dataStore.stockInfo.BS2 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.B2 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.A2 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.AS2 }}</td>
+                </tr>
+                <tr>
+                    <td class="numeric" style="height: 21px;">{{ dataStore.stockInfo.BS3 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.B3 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.A3 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.AS3 }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-condensed table-small">
+            <thead>
+                <tr>
+                    <th class="numeric">Trade Price</th>
+                    <th class="numeric">Trade Size</th>
+                    <th style="text-align:center;">Trade Time</th>
+                    <th class="numeric">Change</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="numeric" style="height:21px;">{{ dataStore.stockInfo.LTP1 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.LTS1}}</td>
+                    <td style="text-align:center;">{{ dataStore.stockInfo.LTT1 }}</td>
+                    <td class="numeric" ng-class="getColour(dataStore.stockInfo.Chg1,true)">
+                        <span ng-show="showChange(dataStore.stockInfo.LTP1)">
+                            {{ dataStore.stockInfo.Chg1 }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="numeric" style="height: 21px;">{{ dataStore.stockInfo.LTP2 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.LTS2 }}</td>
+                    <td style="text-align:center;">{{ dataStore.stockInfo.LTT2 }}</td>
+                    <td class="numeric" ng-class="getColour(dataStore.stockInfo.Chg2,true)">
+                        <span ng-show="showChange(dataStore.stockInfo.LTP2)">
+                            {{ dataStore.stockInfo.Chg2 }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="numeric" style="height: 21px;">{{ dataStore.stockInfo.LTP3 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.LTS3 }}</td>
+                    <td style="text-align:center;">{{ dataStore.stockInfo.LTT3 }}</td>
+                    <td class="numeric" ng-class="getColour(dataStore.stockInfo.Chg3,true)">
+                        <span ng-show="showChange(dataStore.stockInfo.LTP3)">
+                            {{ dataStore.stockInfo.Chg3 }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="numeric" style="height: 21px;">{{ dataStore.stockInfo.LTP4 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.LTS4 }}</td>
+                    <td style="text-align:center;">{{ dataStore.stockInfo.LTT4 }}</td>
+                    <td class="numeric" ng-class="getColour(dataStore.stockInfo.Chg4,true)">
+                        <span ng-show="showChange(dataStore.stockInfo.LTP4)">
+                            {{ dataStore.stockInfo.Chg4 }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="numeric" style="height: 21px;">{{ dataStore.stockInfo.LTP5 }}</td>
+                    <td class="numeric">{{ dataStore.stockInfo.LTS5 }}</td>
+                    <td style="text-align:center;">{{ dataStore.stockInfo.LTT5 }}</td>
+                    <td class="numeric" ng-class="getColour(dataStore.stockInfo.Chg5,true)">
+                        <span ng-show="showChange(dataStore.stockInfo.LTP5)">
+                            {{ dataStore.stockInfo.Chg5 }}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

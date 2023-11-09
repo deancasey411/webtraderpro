@@ -1,0 +1,218 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h3 class="modal-title" style="">New Order</h3>
+</div>
+<div class="modal-body" stop-event="touchend">
+    <form class="form-horizontal" role="form" name="orderEntryForm" novalidate ng-init="configureOrderEntry(false,true)">
+        <div ng-hide="orderConfirmation">
+            <div class="form-group form-group-sm" ng-hide="orderEntryForm.instrument.$invalid">
+                <label for="selaccount" class="col-sm-2 control-label">
+                    {{instrument.Symbol}}
+                </label>
+                <div class="col-sm-10">
+                    <table class="table table-condensed table-small">
+                        <thead>
+                            <tr>
+                                <th class="numeric">
+                                    Bid Vol.
+                                </th>
+                                <th class="numeric">
+                                    Bid
+                                </th>
+                                <th class="numeric">
+                                    Offer
+                                </th>
+                                <th class="numeric">
+                                    Offer Vol.
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="numeric">{{instrument.BS1}}</td>
+                                <td class="numeric">{{instrument.B1}}</td>
+                                <td class="numeric">{{instrument.A1}}</td>
+                                <td class="numeric">{{instrument.AS1}}</td>
+                            </tr>
+                            <tr>
+                                <th class="numeric">
+                                    High
+                                </th>
+                                <th class="numeric">
+                                    Low
+                                </th>
+                                <th class="numeric">
+                                    LTP
+                                </th>
+                                <th class="numeric">
+                                    Change
+                                </th>
+                            </tr>
+                            <tr>
+                                <td class="numeric">{{instrument.H}}</td>
+                                <td class="numeric">{{instrument.L}}</td>
+                                <td class="numeric">{{instrument.LTP}}</td>
+                                <td class="numeric">{{instrument.Chg}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group form-group-sm" ng-class="{ 'has-error' : orderEntryForm.instrument.$invalid }">
+                <label for="inputInstrument" class="col-sm-2 control-label">Contract</label>
+                <div class="col-sm-10">
+                    <input type="text" name="instrument" autocomplete="off" class="form-control input-sm" id="inputInstrument" ng-model="orderDetails.Instrument" typeahead-min-length="2" typeahead-wait-ms="250" typeahead="item as item.symbol for item in getInstruments($viewValue)" typeahead-template-url='app/templates/typeaheadtpl.html' placeholder="Instrument code" typeahead-editable='false' typeahead-loading="loadingInstruments" typeahead-on-select='onInstrumentChange($item, $model, $label)' required />
+                    <span ng-show="loadingInstruments"><i class="glyphicon glyphicon-repeat gly-spin"></i>&nbsp;Loading...</span>
+                    <!--<p ng-show="orderEntryForm.instrument.$invalid" class="help-block">Instrument is required.</p>-->
+                </div>
+            </div>
+            <div class="form-group form-group-sm" ng-class="{ 'has-error' : orderEntryForm.account.$invalid }">
+                <label for="selAccount" class="col-sm-2 control-label">Account</label>
+                <div class="col-sm-10">
+                    <select class="form-control input-sm" id="selAccount" name="account" ng-model="dataStore.tradingAccount" ng-options="ta.account + ' (' + ta.name + ')' group by ta.fixSession for ta in dataStore.tradingAccounts | filter:{ active : true, fixSession: orderDetails.FixSession }" required></select>
+                    <!--<p ng-show="orderEntryForm.account.$invalid" class="help-block">Account is required.</p>-->
+                </div>
+            </div>
+            <div class="form-group form-group-sm" ng-class="{ 'has-error' : orderEntryForm.radSide.$invalid }">
+                <label for="inputinstrument" class="col-sm-2 control-label">
+                    Direction
+                </label>
+                <div class="col-sm-10">
+                    <label class="radio-inline">
+                        <input type="radio" name="radSide" id="inlineRadio1" ng-model="orderDetails.Side" value="B" required> Buy
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="radSide" id="inlineRadio2" ng-model="orderDetails.Side" value="S" required> Sell
+                    </label>
+                    <p ng-show="orderEntryForm.radSide.$invalid" class="help-block">Direction is required.</p>
+                </div>
+            </div>
+            <div class="form-group form-group-sm" ng-class="{ 'has-error' : orderEntryForm.quantity.$invalid }">
+                <label for="inputQuantity" class="col-sm-2 control-label">No of Contracts</label>
+                <div class="col-sm-10">
+                    <input class="form-control input-sm" autocomplete="off" type="number" id="inputQuantity" name="quantity" ng-model="orderDetails.Quantity" placeholder="Enter a quantity" min="1" required />
+                    <p ng-show="orderEntryForm.quantity.$invalid" class="help-block">No of Contracts is required and must be greater than 0.</p>
+                </div>
+            </div>
+            <div class="form-group form-group-sm" ng-class="{ 'has-error' : (orderDetails.OrderType !== 'MO' && orderEntryForm.price.$error.overwriteMin) || orderEntryForm.price.$invalid }">
+                <label for="inputPrice" class="col-sm-2 control-label">@ Price</label>
+                <div class="col-sm-10">
+                    <input class="form-control input-sm" autocomplete="off" name="price" type="number" ng-model="orderDetails.Price" id="inputPrice" placeholder="Enter a price" ng-disabled="orderDetails.OrderType !== 'LO'" ng-required="orderDetails.OrderType !== 'MO'" overwrite-min />
+                    <p ng-show="(orderDetails.OrderType !== 'MO' && orderEntryForm.price.$error.overwriteMin) || orderEntryForm.price.$invalid" class="help-block">Invalid price. Price needs to be greater than 0.</p>
+                </div>
+            </div>
+            <div class="form-group form-group-sm" ng-class="{ 'has-error' : orderEntryForm.radType.$invalid }">
+                <label for="radType" class="col-sm-2 control-label">Type</label>
+                <div class="col-sm-10">
+                    <label class="radio-inline">
+                        <input type="radio" name="radType" id="radtypeLO" ng-model="orderDetails.OrderType" ng-change="updatePrice()" value="LO" checked="checked" required> Limit
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="radType" id="radtypeMO" ng-model="orderDetails.OrderType" ng-change="updatePrice()" value="MO" required> Market
+                    </label>
+                    <span class="glyphicon glyphicon-question-sign" tooltip-placement="top" tooltip="Limit - The order will be submitted with the given price. Market - The order will submitted with a zero price but will trade at the best bid/offer."></span>
+                    <p ng-show="orderEntryForm.radType.$invalid" class="help-block">Order type is required.</p>
+                </div>
+            </div>
+            <div class="form-group form-group-sm" ng-class="{ 'has-error' : orderEntryForm.radTIF.$invalid }">
+                <label for="radTIF" class="col-sm-2 control-label">Life Time</label>
+                <div class="col-sm-10">
+                    <label class="radio-inline">
+                        <input type="radio" name="radTIF" id="radltGFD" ng-model="orderDetails.TIF" value="GFD" checked="checked" required> Day Order
+                    </label>
+                    <span class="glyphicon glyphicon-question-sign" tooltip-placement="top" tooltip="Day Order - Order will expire at the end of the day."></span>
+                    <p ng-show="orderEntryForm.radTIF.$invalid" class="help-block">Order life time is required.</p>
+                </div>
+            </div>
+            <div class="form-group form-group-sm" ng-class="{ 'has-error' : orderEntryForm.notes.$error.maxlength }">
+                <label for="notes" class="col-sm-2 control-label">Notes</label>
+                <div class="col-sm-10">
+                    <input class="form-control input-sm" autocomplete="off" id="inputNotes" name="notes" type="text" ng-model="orderDetails.Notes" ng-maxlength="35">
+                    <p ng-show="orderEntryForm.notes.$error.maxlength" class="help-block">Notes text cannot be greater than 35 characters.</p>
+                </div>
+            </div>
+        </div>
+        <div ng-show="orderConfirmation">
+            <table class="table table-condensed table-small">
+                <tbody>
+                    <tr>
+                        <th colspan="2">Order Details</th>
+                    </tr>
+                    <tr>
+                        <td>Account</td>
+                        <td>{{ dataStore.tradingAccount.account }}</td>
+                    </tr>
+                    <tr>
+                        <td>Contract Code</td>
+                        <td>{{ orderDetails.Instrument.symbol }}</td>
+                    </tr>
+                    <tr>
+                        <td>Contract Name</td>
+                        <td>{{ orderDetails.Instrument.instrumentName }}</td>
+                    </tr>
+                    <tr>
+                        <td>Side</td>
+                        <td>{{ orderDetails.Side }}</td>
+                    </tr>
+                    <tr>
+                        <td>No of Contracts</td>
+                        <td>{{ orderDetails.Quantity }}</td>
+                    </tr>
+                    <tr ng-show="orderDetails.OrderType !== 'MO'">
+                        <td>Order Price</td>
+                        <td>{{ orderDetails.Price }}</td>
+                    </tr>
+                    <tr>
+                        <td>Order Type</td>
+                        <td>{{ orderDetails.OrderType }}</td>
+                    </tr>
+                    <tr>
+                        <td>Good Till</td>
+                        <td>{{ orderDetails.TIF }}</td>
+                    </tr>
+                    <tr ng-hide="orderCosts === null || orderCosts === ''">
+                        <td>Multiplier</td>
+                        <td>{{ orderCosts.nominal }}</td>
+                    </tr>
+                    <tr ng-hide="orderCosts === null || orderCosts === ''" ng-repeat="item in orderCosts.fees | filter: {description: 'Exposure'} :true">
+                        <td>{{::item.description}}</td>
+                        <td>{{::item.amount | number:2}}</td>
+                    </tr>
+                    <tr ng-hide="orderCosts === null || orderCosts === ''">
+                        <th colspan="2">Cash Details</th>
+                    </tr>
+                    <tr ng-hide="orderCosts === null || orderCosts === ''">
+                        <td>Cash Available</td>
+                        <td>{{ orderCosts.cashAvailable | number:2 }}</td>
+                    </tr>
+                    <tr ng-hide="orderCosts === null || orderCosts === ''">
+                        <td>Order Costs</td>
+                        <td>{{ orderCosts.totalFees | number:2}}</td>
+                    </tr>
+                    <tr ng-hide="(ordercosts === null) || (ordercosts === '')" ng-repeat="item in orderCosts.fees | filter: {description: '!Exposure' } :true">
+                        <td style="text-indent: 20px;">{{::item.description}}</td>
+                        <td>{{::item.amount | number:2}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div ng-show="calculateOrderCosts">
+                <div class="alert alert-info" ng-show="(orderCosts === null) || (orderCosts === '')" role="alert">
+                    <span ng-show="orderCosts !== ''">Calculating order costs...Please wait</span>
+                    <span ng-show="orderCosts === ''">Failed to calculate order costs.</span>
+                </div>
+                <div class="alert" role="alert" ng-hide="orderCosts === null || orderCosts === ''" ng-class="orderCosts.cashRemaining >= 0 ? 'alert-success' : 'alert-danger'" style="text-align:center;">
+                    Cash Remaining = {{ orderCosts.cashRemaining | number:2 }}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <div class="alert alert-danger" role="alert" ng-show="message !== ''" style="text-align:left;">
+        {{ message }}
+    </div>
+    <button ng-hide="orderConfirmation" class="btn btn-sm btn-success" ng-click="viewConfirmation(orderEntryForm.$valid)" ng-disabled="orderEntryForm.$invalid || disableButtons">Submit Order</button>
+    <button ng-show="orderConfirmation" class="btn btn-sm btn-info" ng-click="viewOrderDetails()" style="float:left;">Back</button>
+    <button ng-show="orderConfirmation" class="btn btn-sm btn-success" ng-click="submitOrder(orderEntryForm.$valid)" ng-disabled="orderEntryForm.$invalid || disableButtons">Confirm Order</button>
+    <button class="btn btn-sm btn-danger" ng-click="cancel()" ng-disabled="disableButtons">Cancel</button>
+</div>

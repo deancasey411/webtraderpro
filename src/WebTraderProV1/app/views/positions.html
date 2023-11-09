@@ -1,0 +1,69 @@
+﻿<div class="table-responsive">
+    <table class="table table-condensed table-striped table-small table-hover">
+        <thead>
+            <tr>
+                <th colspan="13">
+                    <div style="float:right;">
+                        <small>Last Updated: {{dataStore.posLastUpdated | date : 'yyyy-MM-dd HH:mm:ss'}}</small>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    Account
+                </th>
+                <th>
+                    Exchange
+                </th>
+                <th>
+                    Symbol
+                </th>
+                <th class="numeric">
+                    Start Pos
+                </th>
+                <th class="numeric">
+                    Bought
+                </th>
+                <th class="numeric">
+                    Sold
+                </th>
+                <th class="numeric">
+                    Close Pos
+                </th>
+                <th class="numeric">
+                    Current Price (MTM)
+                </th>
+                <th class="numeric">
+                    Current Exposure
+                </th>
+                <th class="numeric">
+                    Previous Close
+                </th>
+                <th class="numeric">
+                    PnL
+                </th>
+                <th class="numeric">
+                    Daily Initial Margin
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in dataStore.positions | orderBy:'Symbol'">
+                <td>
+                    <button type="button" class="btn btn-default btn-xs" ng-show="global.isTrader" ng-click="newOrderFromPos(item)">New Order</button>&nbsp;{{item.account}}
+                </td>
+                <td>{{::item.exchange}}</td>
+                <td>{{::item.symbol}}</td>
+                <td class="numeric">{{::item.start}}</td>
+                <td class="numeric">{{::item.bought}}</td>
+                <td class="numeric">{{::item.sold}}</td>
+                <td class="numeric">{{::item.close}}</td>
+                <td class="numeric">{{::item.rulingPrice | number}}</td>
+                <td class="numeric">{{::item.exposure | number:2}}</td>
+                <td class="numeric">{{::item.previousClosePrice | number}}</td>
+                <td class="numeric">{{::item.profitLoss | number:2}}</td>
+                <td class="numeric">{{::item.dailyMargin | number:2}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

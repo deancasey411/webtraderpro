@@ -1,0 +1,44 @@
+﻿<div ng-controller="indicesController">
+    <form role="form" class="form-inline">
+        <div class="form-group">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control input-sm" ng-keydown="keypress($event)" style=" min-width:200px;" ng-model="symbol" placeholder="Index code or name" capitalize />
+                <span class="input-group-btn input-group-sm">
+                    <button class="btn btn-default btn-sm" ng-disabled="symbol === null || symbol === ''" type="button" ng-click="searchInstrument()"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div>
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table class="table table-condensed table-small  table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        Index
+                    </th>
+                    <th class="numeric hidden-xs">
+                        Prev Close.
+                    </th>
+                    <th class="numeric">
+                        Value
+                    </th>
+                    <th class="numeric hidden-xs">
+                        Chg
+                    </th>
+                    <th class="numeric">
+                        % Chg
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in dataStore.indices">
+                    <td><button class="btn btn-danger btn-xs" ng-click="removeInstrument(item)"><span class="glyphicon glyphicon-remove"></button> <a href="" ng-click="navstockInfo(item.pesk, item.Symbol, item.name)">{{::item.name}}</a></td>
+                    <td class="numeric hidden-xs">{{item.Cls}}</td>
+                    <td highlight="item.LTP" change-item="item" change-prop="Chg" class="numeric">{{item.LTP | number:2}}</td>
+                    <td highlight="item.Chg" change-item="item" change-prop="Chg" class="numeric hidden-xs text-{{item.chgColour}}">{{item.Chg | number:2}}</td>
+                    <td highlight="item.Chg" change-item="item" change-prop="Chg" class="numeric text-{{item.chgColour}}"><span ng-hide="item.ChgP === null || item.ChgP === ''">{{item.ChgP | number:2}}</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+﻿<div ng-controller="tradingAccountController">
+    <div class="input-group input-group-sm col-sm-4">
+        <select class="form-control" ng-model="dataStore.tradingAccount" ng-options="ta.account + ' (' + ta.name + ')' group by ta.fixSession for ta in dataStore.tradingAccounts track by ta.accountId" ng-change="handleTradingAccountChanged();"></select>
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="button" ng-click="handleTradingAccountChanged()"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+        </span>
+    </div><br />
+</div>

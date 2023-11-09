@@ -1,0 +1,30 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" ng-click="close()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h3 class="modal-title" style="">Select the instrument to trade on.</h3>
+</div>
+<div class="modal-body" style="max-height:400px; overflow-y:auto;" stop-event="touchend">
+    <p>
+        More than one tradable instrument was found for the selected instrument. Please select the instrument you would like to place the order for.
+    </p>
+    <table class="table table-condensed table-hover table-small">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Exchange</th>
+                <th style="text-align:center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="instrument in ::instruments | orderBy:'Symbol'">
+                <td>{{ ::instrument.symbol }}</td>
+                <td>{{ ::instrument.instrumentName }}</td>
+                <td>{{ ::instrument.exchange }}</td>
+                <td style="text-align:center"><button class="btn btn-xs btn-primary" ng-click="selectInstrument(instrument)"><span class="glyphicon glyphicon-ok"></span> Select</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-sm btn-default" ng-click="close()">Close</button>
+</div>

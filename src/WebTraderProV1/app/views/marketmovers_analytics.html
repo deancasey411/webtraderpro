@@ -1,0 +1,44 @@
+<div class="table-responsive">
+    <table class="table table-condensed table-small">
+        <thead>
+            <tr>
+                <th>
+                    Symbol
+                </th>
+                <th class="numeric" style="padding-left: 5px;">
+                    Close
+                </th>
+                <th class="numeric" style="padding-left: 5px;">
+                    Price
+                </th>
+                <th class="numeric" style="padding-left: 5px;">
+                    Chg
+                </th>
+                <th class="numeric" style="padding-left: 5px;">
+                    % Chg
+                </th>
+                <th class="numeric" style="padding-left: 5px;">
+                    Volume
+                </th>
+                <th class="numeric" style="padding-left: 5px;">
+                    Value
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in marketMovers">
+                <td>
+                    <a href="" ng-click="navstockInfo(item.exchangeSymbolKey, item.symbol, item.name)">
+                        {{ ::item.symbol}}
+                    </a>
+                </td>
+                <td class="numeric">{{ ::item.previousClosePrice | number:2 }}</td>
+                <td class="numeric">{{ ::item.lastTradePrice | number:2 }}</td>
+                <td class="numeric" ng-class="::((item.change > 0) ? 'text-success' : ((item.change < 0) ? 'text-danger' : 'text-warning'))">{{ ::item.change | number:2 }}</td>
+                <td class="numeric" ng-class="::((item.change > 0) ? 'text-success' : ((item.change < 0) ? 'text-danger' : 'text-warning'))">{{ ::item.changePercentage | number:2 }}</td>
+                <td class="numeric">{{ ::item.dailyVolume | number }}</td>
+                <td class="numeric">{{ ::item.dailyValue | number:2 }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

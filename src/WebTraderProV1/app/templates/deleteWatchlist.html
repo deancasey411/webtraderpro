@@ -1,0 +1,11 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h3 class="modal-title">Delete Watchlist</h3>
+</div>
+<div class="modal-body" stop-event="touchend">
+    <div class="alert alert-danger" role="alert">Are you sure you want to delete the watchlist '{{watchlist.name}}'?</div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-sm btn-success" ng-click="deleteWatchlist(watchlist.id)">Delete</button>
+    <button class="btn btn-sm btn-danger" ng-click="cancel()">Cancel</button>
+</div>

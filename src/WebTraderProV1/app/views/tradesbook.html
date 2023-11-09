@@ -1,0 +1,49 @@
+﻿<div class="col-sm-12">
+    <div class="table-responsive">
+        <table class="table table-condensed table-striped table-small table-hover">
+            <thead>
+                <tr>
+                    <th colspan="7">
+                        <div style="float:right;">
+                            <small>Last Updated: {{dataStore.tbLastUpdated | date : 'yyyy-MM-dd HH:mm:ss'}}</small>
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        Account
+                    </th>
+                    <th>
+                        Exchange
+                    </th>
+                    <th>
+                        Symbol
+                    </th>
+                    <th>
+                        Side
+                    </th>
+                    <th class="numeric">
+                        Trade Price
+                    </th>
+                    <th class="numeric">
+                        Trade Qty
+                    </th>
+                    <th style="text-align: center;">
+                        Trade Date & Time
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in dataStore.tradesbook | orderBy:'timestamp':true">
+                    <td>{{::item.account}}</td>
+                    <td>{{::item.exchange}}</td>
+                    <td>{{::item.symbol}}</td>
+                    <td>{{::convertSide(item.side)}}</td>
+                    <td class="numeric">{{::item.price | number}}</td>
+                    <td class="numeric">{{::item.quantity}}</td>
+                    <td style="text-align: center;">{{::item.timestamp | date : 'yyyy-MM-dd HH:mm:ss'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

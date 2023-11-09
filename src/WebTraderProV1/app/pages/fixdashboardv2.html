@@ -1,0 +1,296 @@
+﻿<div class="col-md-12">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Trading Dashboard</h3>
+        </div>
+        <div class="panel-body">
+            <div>
+                <div class="input-group input-group-sm col-sm-4">
+                    <select class="form-control" ng-model="dataStore.tradingAccount" ng-options="ta.Account + ' (' + ta.Name + ')' group by ta.FIXSession for ta in dataStore.tradingAccounts track by ta.Account" ng-change="getData()"></select>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="getData()"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+                    </span>
+                </div>
+                <br />
+            </div>
+            <!--<tree-grid tree-data="dataStore.positionsSummaryV2" col-defs="col_defs" icon-leaf="icon-file" ng-show="global.showPositions && global.showPositionsSummary"></tree-grid>-->
+            <div style="text-align: right;" ng-show="global.showPositions && global.showPositionsSummary">
+                <button class="btn btn-info btn-sm" type="button">
+                    Exposure (Long) <span class="badge">{{ dataStore.psLongExposure | number:2 }}</span> (Short) <span class="badge">{{ dataStore.psShortExposure | number:2 }}</span>
+                </button>
+                <button class="btn btn-default btn-sm" type="button">
+                    Gearing <span class="badge">{{ dataStore.psPortfolioValue > 0 ? ((dataStore.psLongExposure + dataStore.psShortExposure) / dataStore.psPortfolioValue).toFixed(2) : 'Inf'}}</span>
+                </button>
+                <button class="btn btn-default btn-sm" type="button">
+                    Available Cash <span class="badge">{{ dataStore.psAvailableCash | number:2 }}</span>
+                </button>
+                <button class="btn btn-default btn-sm" type="button">
+                    Portfolio Value <span class="badge">{{ dataStore.psPortfolioValue | number:2 }}</span>
+                </button>
+                <button class="btn btn-primary btn-sm" type="button" ng-click="isCollapsed = !isCollapsed">
+                    {{ isCollapsed ? "Show Details" : "Hide Details" }}
+                </button>
+            </div>
+            <div class="table-responsive" ng-show="global.showPositions && global.showPositionsSummary" collapse="isCollapsed">
+                <table class="table table-condensed table-small table-hover">
+                    <thead>
+                        <tr>
+                            <th colspan="5">
+                                Portfolio Summary <small>(* Calculated value for indicitive purposes.)</small>
+                                <div style="float:right;">
+                                    <small>Last Updated: {{dataStore.posLastUpdated | date : 'yyyy-MM-dd HH:mm:ss'}}</small>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                Period
+                            </th>
+                            <th>
+                                Details
+                            </th>
+                            <th>
+                                Source
+                            </th>
+                            <th class="numeric">
+                                Cash
+                            </th>
+                            <th class="numeric">
+                                Value
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in dataStore.positionsSummary" ng-class="{ 'boldtr' : shouldBold(item) }">
+                            <td>
+                                {{:: item.Period || '&nbsp;'}}
+                            </td>
+                            <td>{{::item.Details || '&nbsp;'}}</td>
+                            <td>{{::item.Source || '&nbsp;'}}</td>
+                            <td class="numeric">{{::item.Cash | number:2 }}</td>
+                            <td class="numeric">{{::item.Value | number:2 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <tabset>
+                <tab heading="Orderbook">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table class="table table-condensed table-striped table-small table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="12">
+                                                    <div class="pull-left">
+                                                        <button class="btn btn-info btn-xs" type="button" ng-click="dataStore.openOrdersOnly = !(dataStore.openOrdersOnly)">
+                                                            Show only open orders <span class="badge">{{ dataStore.openOrdersOnly === true ? "Yes" : "No" }}</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="pull-right">
+                                                        <small>Last Updated: {{dataStore.obLastUpdated | date : 'yyyy-MM-dd HH:mm:ss'}}</small>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    Account
+                                                </th>
+                                                <th>
+                                                    Exchange
+                                                </th>
+                                                <th>
+                                                    Symbol
+                                                </th>
+                                                <th>
+                                                    Side
+                                                </th>
+                                                <th class="numeric">
+                                                    Price
+                                                </th>
+                                                <th class="numeric">
+                                                    Traded Qty
+                                                </th>
+                                                <th class="numeric">
+                                                    VWAP
+                                                </th>
+                                                <th style="text-align:center;">
+                                                    Life Time
+                                                </th>
+                                                <th style="text-align: center;">
+                                                    Type
+                                                </th>
+                                                <th style="text-align: center;">
+                                                    Timestamp
+                                                </th>
+                                                <th style="text-align: center;">
+                                                    Order Status
+                                                </th>
+                                                <th style="text-align: center;">
+                                                    Inst. Status
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in dataStore.orderbook |orderBy:'created':true">
+                                                <td>
+                                                    <button class=" btn btn-danger btn-xs" ng-click="cancelOrder(item)" ng-show="{{ global.isTrader && (item.remainingQuantity !== 0) || (item.instructionStatus.indexOf('AA:') === 0) || (item.instructionStatus.indexOf('P:') === 0) }}" tooltip-placement="right" tooltip-html-unsafe='Click to cancel order. {{item.side}} {{item.orderQuantity}} {{item.symbol }} @ {{item.price}}'>
+                                                        <span class="glyphicon glyphicon-remove"></span>
+                                                    </button> {{::item.account}}
+                                                </td>
+                                                <td>{{::item.exchange}}</td>
+                                                <td>{{::item.symbol}}</td>
+                                                <td>{{::convertSide(item.side)}}</td>
+                                                <td class="numeric">{{::item.price}}</td>
+                                                <td class="numeric">{{::item.tradedQuantity}} / {{::item.orderQuantity}}</td>
+                                                <td class="numeric">{{ ::item.vwap | number}}</td>
+                                                <td style="text-align: center;">{{::convertLifeTime(item.timeInForce)}}</td>
+                                                <td style="text-align: center;">{{::convertType(item.orderType)}}</td>
+                                                <td style="text-align: center;">{{::item.created | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                                <td style="text-align: center;" ng-class="getOrderStatusClass(item.orderStatus)">{{::item.orderStatus}}</td>
+                                                <td style="text-align: center;" ng-class="getInstructionStatusClass(item.instructionStatus)" tooltip-placement="left" tooltip-html-unsafe='{{ item.handledBy }} {{item.rejectReason }}'>{{::item.instructionStatus}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+                <tab heading="Tradesbook">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table class="table table-condensed table-striped table-small table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="7">
+                                                    <div style="float:right;">
+                                                        <small>Last Updated: {{dataStore.tbLastUpdated | date : 'yyyy-MM-dd HH:mm:ss'}}</small>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    Account
+                                                </th>
+                                                <th>
+                                                    Exchange
+                                                </th>
+                                                <th>
+                                                    Symbol
+                                                </th>
+                                                <th>
+                                                    Side
+                                                </th>
+                                                <th class="numeric">
+                                                    Trade Price
+                                                </th>
+                                                <th class="numeric">
+                                                    Trade Qty
+                                                </th>
+                                                <th style="text-align: center;">
+                                                    Trade Date & Time
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in dataStore.tradesbook | orderBy:'timestamp':true">
+                                                <td>{{::item.account}}</td>
+                                                <td>{{::item.exchange}}</td>
+                                                <td>{{::item.symbol}}</td>
+                                                <td>{{::convertSide(item.side)}}</td>
+                                                <td class="numeric">{{::item.price | number}}</td>
+                                                <td class="numeric">{{::item.quantity}}</td>
+                                                <td style="text-align: center;">{{::item.timestamp | date : 'yyyy-MM-dd HH:mm:ss'}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+                <tab heading="Positions" ng-show="global.showPositions">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div class="table-responsive">
+                                    <table class="table table-condensed table-striped table-small table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="13">
+                                                    <div style="float:right;">
+                                                        <small>Last Updated: {{dataStore.posLastUpdated | date : 'yyyy-MM-dd HH:mm:ss'}}</small>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th>
+                                                    Account
+                                                </th>
+                                                <th>
+                                                    Exchange
+                                                </th>
+                                                <th>
+                                                    Symbol
+                                                </th>
+                                                <th class="numeric">
+                                                    Start Pos
+                                                </th>
+                                                <th class="numeric">
+                                                    Bought
+                                                </th>
+                                                <th class="numeric">
+                                                    Sold
+                                                </th>
+                                                <th class="numeric">
+                                                    Close Pos
+                                                </th>
+                                                <th class="numeric">
+                                                    Current Price (MTM)
+                                                </th>
+                                                <th class="numeric">
+                                                    Current Exposure
+                                                </th>
+                                                <th class="numeric">
+                                                    Previous Close
+                                                </th>
+                                                <th class="numeric">
+                                                    PnL
+                                                </th>
+                                                <th class="numeric">
+                                                    Daily Initial Margin
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="item in dataStore.positions | orderBy:'Symbol'">
+                                                <td>
+                                                    <button type="button" class="btn btn-default btn-xs" ng-show="global.isTrader" ng-click="newOrderFromPos(item)">New Order</button>&nbsp;{{item.account}}
+                                                </td>
+                                                <td>{{::item.exchange}}</td>
+                                                <td>{{::item.symbol}}</td>
+                                                <td class="numeric">{{::item.start}}</td>
+                                                <td class="numeric">{{::item.bought}}</td>
+                                                <td class="numeric">{{::item.sold}}</td>
+                                                <td class="numeric">{{::item.close}}</td>
+                                                <td class="numeric">{{::item.rulingPrice | number}}</td>
+                                                <td class="numeric">{{::item.exposure | number:2}}</td>
+                                                <td class="numeric">{{::item.previousClosePrice | number}}</td>
+                                                <td class="numeric">{{::item.profitLoss | number:2}}</td>
+                                                <td class="numeric">{{::item.dailyMargin | number:2}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div>

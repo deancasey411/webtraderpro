@@ -1,0 +1,71 @@
+﻿<div class="col-md-8">
+    <div class="panel panel-default" style="min-height:320px;">
+        <div class="panel-heading">
+            <h3 class="panel-title">Watchlist</h3>
+        </div>
+        <div class="panel-body">
+            <div ng-include="'app/views/watchlist.html'"></div>
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-default" style="min-height: 320px;">
+        <div class="panel-heading">
+            <h3 class="panel-title">Indices</h3>
+        </div>
+        <div class="panel-body">
+            <div ng-include="'app/views/indices.html'"></div>
+        </div>
+    </div>
+</div>
+<div class="col-md-8">
+    <div class="panel panel-default" style="min-height: 324px;" id="pnlStockInfo">
+        <div class="panel-heading">
+            <h3 class="panel-title">Stock Info - <small>{{dataStore.stockInfo.Name}}</small></h3>
+        </div>
+        <div class="panel-body">
+            <div ng-include="'app/views/stockinfo.html'"></div>
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Intraday Chart - <small>{{dataStore.stockInfo.Name}}</small></h3>
+        </div>
+        <div class="panel-body">
+            <div ng-include="'app/views/stockchart.html'"></div>
+        </div>
+    </div>
+</div>
+<div>
+    <div class="col-md-8">
+        <div ng-include="'app/views/news.html'"></div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Market Movers - <small>Last Updated: {{dataStore.mmLastUpdated | date:'HH:mm:ss'}}</small></h3>
+            </div>
+            <div class="panel-body">
+                <tabset>
+                    <tab heading="Gainers">
+                        <div ng-include="'app/views/marketmovers.html'" ng-init="init('Up','Gainers','JSEMIT')" ng-controller=" marketMoversController"></div>
+                    </tab>
+                    <tab heading="Losers">
+                        <div ng-include="'app/views/marketmovers.html'" ng-init="init('Down','Losers','JSEMIT')" ng-controller=" marketMoversController"></div>
+                    </tab>
+                    <tab heading="by Value">
+                        <div ng-include="'app/views/marketmovers.html'" ng-init="init('Value','Value','JSEMIT')" ng-controller=" marketMoversController"></div>
+                    </tab>
+                    <tab heading="by Volume">
+                        <div ng-include="'app/views/marketmovers.html'" ng-init="init('Volume','Volume','JSEMIT')" ng-controller=" marketMoversController"></div>
+                    </tab>
+                    <tab heading="by Trades">
+                        <div ng-include="'app/views/marketmovers.html'" ng-init="init('Trades','Trades','JSEMIT')" ng-controller=" marketMoversController"></div>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+</div>

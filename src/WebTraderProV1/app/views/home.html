@@ -1,0 +1,31 @@
+<div class="jumbotron">
+    <div class="container">
+        <div class="page-header text-center">
+            <h1>WebTraderPro</h1>
+        </div>
+        <div class="col-md-3">
+            &nbsp;
+        </div>
+        <div class="col-md-6">
+            <div ng-hide="global.tokenLogon">
+                <h2>Login</h2>
+                <p class="text-primary">If you have Username and Password, you can use the button below to access the secured content.</p>
+                <p><a class="btn btn-default" href="#/login" role="button">Login &raquo;</a></p>
+            </div>
+            <div ng-show="global.tokenLogon">
+                <h2 style="text-align:center;">Logging in....please wait</h2>
+                <div class="col-sm-12">
+                    <progressbar class="progress-striped active" max="100" value="100"></progressbar>
+                </div>
+            </div>
+        </div>
+        <!--<div class="col-md-5">
+            <h2>Sign Up</h2>
+            <p class="text-primary">Use the button below to create Username and Password to access the secured content.</p>
+            <p><a class="btn btn-default" href="#/signup" role="button">Sign Up &raquo;</a></p>
+        </div>-->
+        <div class="col-md-3">
+            &nbsp;
+        </div>
+    </div>
+</div>

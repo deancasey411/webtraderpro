@@ -1,0 +1,57 @@
+﻿{
+  "serviceBaseUrl": "http://localhost:5000",
+  "clientAppId": "V2ViVHJhZGVyUHJvOkVFMDY5NURBLUU3MTctNDQ5RS04RjNCLUU1MjhDNDVBRkY0Nw==",
+  "authType": "dotnetnuke",
+  "portalId": 0,
+  "lightStreamerUrl": "https://webpush2.nutcracker.co.za",
+  "logoutPage": "http://localhost/Default.aspx",
+  "showPositions": true,
+  "showPositionsSummary": true,
+  "swapWatchlistBuySell": true,
+  "hideJSEEquityData": false,
+  "useUTC": false,
+  "orderRouting": [
+    {
+      "FixSession": "JSEMIT",
+      "Description": "JSE Equity",
+      "Template": "orderEntry.html",
+      "Controller": "orderentryController"
+    },
+    {
+      "FixSession": "EXSIM",
+      "Description": "Exchange Sim",
+      "Template": "orderEntry.html",
+      "Controller": "orderentryController"
+    },
+    {
+      "FixSession": "MOM",
+      "Description": "Manual Order Manager",
+      "Template": "orderEntry.html",
+      "Controller": "orderentryController"
+    },
+    {
+      "FixSession": "EDM",
+      "Description": "JSE SA Derivatives Market",
+      "Template": "orderentryITaC.html",
+      "Controller": "orderentryController"
+    },
+    {
+      "FixSession": "IRC",
+      "Description": "JSE SA Currencies Market",
+      "Template": "orderentrySAFEX.html",
+      "Controller": "orderentryController"
+    },
+    {
+      "FixSession": "MITS",
+      "Description": "Nairobi Derivatives Market",
+      "Template": "orderentrySAFEX.html",
+      "Controller": "orderentryController"
+    },
+    {
+      "FixSession": "SAFEXAGM",
+      "Description": "SA Agri Market",
+      "Template": "orderentrySAFEX.html",
+      "Controller": "orderentryController"
+    }
+  ]
+}

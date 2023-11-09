@@ -1,0 +1,36 @@
+﻿<div class="panel panel-default" ng-controller="newsController">
+    <div class="panel-heading">
+        <h3 class="panel-title">News - <small>Last Updated: {{dataStore.newsLastUpdated | date:'HH:mm:ss'}}</small></h3>
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed table-small">
+                <thead>
+                    <tr>
+                        <th>
+                            Time
+                        </th>
+                        <th style="padding-left: 5px;">
+                            Symbols
+                        </th>
+                        <th style="padding-left: 5px;">
+                            Headline
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in dataStore.newsHeadlines | orderBy:'NewsId':true">
+                        <td style="white-space: nowrap;">{{::item.timeStamp | date:'HH:mm:ss'}}</td>
+                        <td style="white-space: nowrap; padding-left: 5px;">
+                            <span ng-repeat="symbol in item.instrumentCodes|limitTo:1">
+                                <span tooltip-placement="top" tooltip="{{ item.instrumentCodes.join(', ') }}" ng-show="item.instrumentCodes.length > 1">{{::item.instrumentCodes[0]}}...</span>
+                                <span ng-hide="item.instrumentCodes.length > 1">{{::item.instrumentCodes[0]}}</span>
+                            </span>
+                        </td>
+                        <td style="padding-left: 5px;"><a href="" ng-click="showNewsContent(item.id)">{{::item.headline}}</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

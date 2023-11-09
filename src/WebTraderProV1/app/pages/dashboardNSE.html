@@ -1,0 +1,82 @@
+<div class="col-md-8">
+    <div class="panel panel-default" style="min-height:320px;">
+        <div class="panel-heading">
+            <h3 class="panel-title">Watchlist</h3>
+        </div>
+        <div class="panel-body">
+            <div ng-include="'app/views/watchlist.html'"></div>
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-default" style="min-height: 320px;">
+        <div class="panel-heading">
+            <h3 class="panel-title">Indices</h3>
+        </div>
+        <div class="panel-body">
+            <div ng-include="'app/views/indices.html'"></div>
+        </div>
+    </div>
+</div>
+<div class="col-md-8">
+    <div class="panel panel-default" style="min-height: 324px;" id="pnlStockInfo">
+        <div class="panel-heading">
+            <h3 class="panel-title">Stock Info - <small>{{dataStore.stockInfo.Symbol}}</small></h3>
+        </div>
+        <div class="panel-body">
+            <div ng-include="'app/views/stockinfo.html'"></div>
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Intraday Chart - <small>{{dataStore.stockInfo.Symbol}}</small></h3>
+        </div>
+        <div class="panel-body">
+            <div ng-include="'app/views/stockchart.html'"></div>
+        </div>
+    </div>
+</div>
+<div>
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Gainers <small>Last Updated: {{dataStore.mmLastUpdated | date:'HH:mm:ss'}}</small></h3>
+            </div>
+            <div class="panel-body">
+                <div ng-include="'app/views/marketmovers_nse.html'" ng-init="init('Up','Up','NSE Main')" ng-controller=" marketMoversController"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Losers</h3>
+            </div>
+            <div class="panel-body">
+                <div ng-include="'app/views/marketmovers_nse.html'" ng-init="init('Down','Down','NSE Main')" ng-controller=" marketMoversController"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">By Value</h3>
+            </div>
+            <div class="panel-body">
+                <div ng-include="'app/views/marketmovers_nse.html'" ng-init="init('Value','Value','NSE Main')" ng-controller=" marketMoversController"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">By Volume</h3>
+            </div>
+            <div class="panel-body">
+                <div ng-include="'app/views/marketmovers_nse.html'" ng-init="init('Volume','Volume','NSE Main')" ng-controller=" marketMoversController"></div>
+            </div>
+        </div>
+    </div>
+</div>

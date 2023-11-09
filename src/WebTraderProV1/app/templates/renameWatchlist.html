@@ -1,0 +1,23 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h3 class="modal-title">Rename Watchlist</h3>
+</div>
+<div class="modal-body" stop-event="touchend">
+    <form name="renameWatchlistForm" role="form" novalidate>
+        <span class="label label-danger" ng-show="renameWatchlistForm.watchlistName.$error.required">
+            Required!
+        </span>
+        <span class="label label-warning" ng-show="renameWatchlistForm.watchlistName.$error.maxlength">
+            Watchlist name cannot exceed 15 characters.
+        </span>
+        <span class="label label-warning" ng-show="isDuplicate">
+            Watchlist name already exists.
+        </span>
+        <input type="text" class="form-control" name="watchlistName" ng-model="watchlistName" placeholder="Watchlist name" capitalize required ng-maxlength="15">
+        <span class="help-block">Please enter a unique name for your watchlist below.</span>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-sm btn-success" ng-disabled="renameWatchlistForm.watchlistName.$error.maxlength || renameWatchlistForm.watchlistName.$error.required" ng-click="renameExistingWatchlist(watchlistName)">Save</button>
+    <button class="btn btn-sm btn-danger" ng-click="cancel()">Cancel</button>
+</div>

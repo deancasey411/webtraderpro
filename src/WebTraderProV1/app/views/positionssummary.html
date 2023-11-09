@@ -1,0 +1,49 @@
+﻿<div class="table-responsive" ng-show="global.showPositions && global.showPositionsSummary" collapse="dataStore.isCollapsed">
+    <table class="table table-condensed table-small table-hover">
+        <thead>
+            <tr>
+                <th colspan="5">
+                    Portfolio Summary <small>(* Calculated value for indicitive purposes.)</small>
+                    <div style="float:right;">
+                        <small>Last Updated: {{dataStore.posLastUpdated | date : 'yyyy-MM-dd HH:mm:ss'}}</small>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th>
+                    Period
+                </th>
+                <th>
+                    Details
+                </th>
+                <th>
+                    Source
+                </th>
+                <th class="numeric">
+                    Cash
+                </th>
+                <th class="numeric">
+                    Value
+                </th>
+            </tr>
+        </thead>
+        <tbody ng-repeat="item in dataStore.positionsSummary.items">
+            <tr ng-class="{ 'boldtr' : shouldBold(item) }">
+                <td>
+                    {{:: item.category || '&nbsp;'}}
+                </td>
+                <td>{{::item.details || '&nbsp;'}}</td>
+                <td>{{::item.source || '&nbsp;'}}</td>
+                <td class="numeric"><span ng-if="item.category === 'Trade Today' || (item.category === 'Final' && item.details === 'Intraday Available Cash')">{{::item.totalValue | number:2 }}</span></td>
+                <td class="numeric"><span ng-if="item.category === 'Balance B/F' || (item.category === 'Final' && item.details !== 'Intraday Available Cash')">{{::item.totalValue | number:2 }}</span></td>
+            </tr>
+            <tr ng-repeat="item2 in item.items">
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>{{::item2.source || '&nbsp;'}}</td>
+                <td class="numeric"><span ng-if="item2.category === 'Trade Today' || (item2.category === 'Final' && item2.details === 'Intraday Available Cash')">{{::item2.crossValue | number:2 }}</span></td>
+                <td class="numeric"><span ng-if="item2.category === 'Balance B/F' || (item2.category === 'Final' && item2.details !== 'Intraday Available Cash')">{{::item2.crossValue | number:2 }}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

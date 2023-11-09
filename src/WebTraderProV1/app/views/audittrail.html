@@ -1,0 +1,89 @@
+﻿<div class="jumbotron">
+    <div class="container">
+        <div class="page-header text-center">
+            <h3>Audit Trail</h3>
+        </div>
+        <div class="container">
+            <div class="table-responsive">
+                <table class="table table-condensed table-small  table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Error Logs
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in $log.error.logs">
+                            <td class="danger">item</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-condensed table-small  table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Warning Logs
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in $log.info.logs">
+                            <td class="warning">item</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-condensed table-small  table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Info Logs
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in $log.info.logs">
+                            <td class ="info">item</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-condensed table-small  table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Info Logs
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in info.logs">
+                            <td class="info">item</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-condensed table-small  table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Debug Logs
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in $log.debug.logs">
+                            <td>item</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+﻿<div ng-controller="watchlistController">
+    <form role="form" class="form-inline">
+        <div class="form-group">
+            <div class="input-group input-group-sm">
+                <select class="form-control input-sm" style="min-width:200px;" ng-model="dataStore.watchlist" ng-change="watchlistChanged();" ng-options="wl.name for wl in dataStore.watchlists track by wl.id | orderBy:'name'"></select>
+                <span class="input-group-btn input-group-sm">
+                    <button class="btn btn-default btn-sm" type="button" ng-click="newWatchlist()"><span class="glyphicon glyphicon-plus"></span></button>
+                    <button class="btn btn-primary btn-sm" type="button" ng-click="deleteWatchlist()"><span class="glyphicon glyphicon-minus" ng-disabled="!dataStore.watchlist"></span></button>
+                    <button class="btn btn-primary btn-sm" type="button" ng-click="renameWatchlist()"><span class="glyphicon glyphicon-edit" ng-disabled="!dataStore.watchlist"></span></button>
+                </span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control" ng-keydown="keypress($event)" style=" min-width:200px;" ng-model="symbol" placeholder="Instrument code or name" capitalize />
+                <span class="input-group-btn">
+                    <button class="btn btn-default" ng-disabled="symbol === null || symbol === ''" type="button" ng-click="searchInstrument()"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div>
+        </div>
+        <div class="form-group" ng-if="isRealTimeUser()">
+            <div class="input-group input-group-sm">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary btn-sm" type="button" ng-click="toggleDepth()"><span ng-class="{ 'glyphicon glyphicon-minus' : dataStore.ThreeLineDepth, 'glyphicon glyphicon-th-list' : !dataStore.ThreeLineDepth }"></span> {{ dataStore.ThreeLineDepth ? ' 1 Line Depth' : ' 3 Line Depth' }}</button>
+                </span>
+            </div>
+        </div>
+    </form>
+    <div class="table-responsive">
+        <table class="table table-condensed table-small table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        Symbol
+                    </th>
+                    <!--<th class="hidden-xs hidden-sm">
+                        Name
+                    </th>-->
+                    <th class="numeric hidden-xs">
+                        Bid Vol.
+                    </th>
+                    <th class="numeric">
+                        Bid
+                    </th>
+                    <th class="numeric">
+                        Offer
+                    </th>
+                    <th class="numeric hidden-xs">
+                        Offer Vol.
+                    </th>
+                    <th class="numeric">
+                        LTP
+                    </th>
+                    <th class="numeric hidden-xs hidden-sm hidden-md">
+                        LT Vol.
+                    </th>
+                    <th class="numeric hidden-xs hidden-sm hidden-md">
+                        LTT
+                    </th>
+                    <th class="numeric hidden-xs">
+                        Chg
+                    </th>
+                    <th class="numeric">
+                        Chg %
+                    </th>
+                    <th class="numeric">
+                        Close
+                    </th>
+                    <th class="numeric hidden-xs hidden-sm hidden-md">
+                        Low
+                    </th>
+                    <th class="numeric hidden-xs hidden-sm hidden-md">
+                        High
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in dataStore.instruments track by item.pesk">
+                    <td style="white-space:nowrap;">
+                        <button class="btn btn-danger btn-xs" ng-click="removeInstrument(item)">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                        <a href="" ng-click="navstockInfo(item.pesk, item.Symbol, item.name)">
+                            {{ ::item.Symbol}}
+                        </a>
+                    </td>
+                    <td highlight="item.BS1" change-item="item" change-prop="Chg" class="numeric hidden-xs">
+                        <div>
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('S',item.B1,item.pesk)"> {{item.BS1}}</a>
+                        </div>
+                        <div ng-show="dataStore.ThreeLineDepth">
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('S',item.B2,item.pesk)"> {{item.BS2}}</a>
+                        </div>
+                        <div ng-show="dataStore.ThreeLineDepth">
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('S',item.B3,item.pesk)"> {{item.BS3}}</a>
+                        </div>
+                    </td>
+                    <td style="vertical-align:top;" class="numeric" highlight="item.B1" change-item="item" change-prop="Chg">
+                        <div>
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('S',item.B1,item.pesk)"> {{item.B1}}</a>
+                        </div>
+                        <div ng-show="dataStore.ThreeLineDepth">
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('S',item.B2,item.pesk)"> {{item.B2}}</a>
+                        </div>
+                        <div ng-show="dataStore.ThreeLineDepth">
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('S',item.B3,item.pesk)"> {{item.B3}}</a>
+                        </div>
+                    </td>
+                    <td highlight="item.A1" change-item="item" change-prop="Chg" class="numeric" >
+                        <div>
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('B',item.A1,item.pesk)"> {{item.A1}}</a>
+                        </div>
+                        <div ng-show="dataStore.ThreeLineDepth">
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('B',item.A2,item.pesk)"> {{item.A2}}</a>
+                        </div>
+                        <div ng-show="dataStore.ThreeLineDepth">
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('B',item.A3,item.pesk)"> {{item.A3}}</a>
+                        </div>
+                    </td>
+                    <td highlight="item.AS1" change-item="item" change-prop="Chg" class="numeric hidden-xs">
+                        <div>
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('B',item.A1,item.pesk)"> {{item.AS1}}</a>
+                        </div>
+                        <div ng-show="dataStore.ThreeLineDepth">
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('B',item.A2,item.pesk)"> {{item.AS2}}</a>
+                        </div>
+                        <div ng-show="dataStore.ThreeLineDepth">
+                            <a href="" ng-disabled="!global.isTrader" ng-click="newOrder('B',item.A3,item.pesk)"> {{item.AS3}}</a>
+                        </div>
+                    </td>
+                    <td highlight="item.LTP" change-item="item" change-prop="Chg" class="numeric"><a href="" ng-disabled="!global.isTrader" ng-click="newOrder('',item.LTP,item.pesk)"> {{item.LTP}}</a></td>
+                    <td highlight="item.LTS" change-item="item" change-prop="Chg" class="numeric hidden-xs hidden-sm hidden-md">{{item.LTS}}</td>
+                    <td highlight="item.LTT" change-item="item" change-prop="Chg" class="numeric hidden-xs hidden-sm hidden-md">{{item.LTT}}</td>
+                    <td highlight="item.Chg" change-item="item" change-prop="Chg" class="numeric hidden-xs text-{{item.chgColour}}">{{item.Chg | number:2}}</td>
+                    <td highlight="item.ChgP" change-item="item" change-prop="Chg" class="numeric text-{{item.chgColour}}"><span ng-hide="item.ChgP === null || item.ChgP === ''">{{item.ChgP | number:2}}</span></td>
+                    <td highlight="item.Cls" change-item="item" change-prop="Chg" class="numeric">{{item.Cls}}</td>
+                    <td highlight="item.L" change-item="item" change-prop="Chg" class="numeric hidden-xs hidden-sm hidden-md">{{item.L}}</td>
+                    <td highlight="item.H" change-item="item" change-prop="Chg" class="numeric hidden-xs hidden-sm hidden-md">{{item.H}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
